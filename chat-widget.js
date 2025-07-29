@@ -344,4 +344,136 @@
     chatContainer.className = `chat-container${config.style.position === 'left' ? ' position-left' : ''}`;
     
     const newConversationHTML = `
-        <div
+        <div class="new-conversation">
+            <div class="welcome-text">${config.branding.welcomeText || 'Welcome! Start a conversation'}</div>
+            <button class="new-chat-btn" type="button">
+                <svg class="message-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M20 2H4c-1.1 0-2 .9-2 2v16l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                Start Chat
+            </button>
+            <p class="response-text">${config.branding.responseTimeText || 'Typically responds in a few minutes'}</p>
+        </div>
+    `;
+
+    const chatInterfaceHTML = `
+        <div class="chat-interface">
+            <div class="brand-header">
+                ${config.branding.logo ? `<img src="${config.branding.logo}" alt="Logo">` : ''}
+                <span>${config.branding.name || 'Chat'}</span>
+                <button class="close-button" aria-label="Close chat">&times;</button>
+            </div>
+            <div class="chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+            <form class="chat-input" aria-label="Send a message">
+                <textarea placeholder="Type your message here..." rows="2" required></textarea>
+                <button type="submit">Send</button>
+            </form>
+            <div class="chat-footer">
+                <a href="${config.branding.poweredBy.link}" target="_blank" rel="noopener">${config.branding.poweredBy.text}</a>
+            </div>
+        </div>
+    `;
+
+    chatContainer.innerHTML = newConversationHTML + chatInterfaceHTML;
+    widgetContainer.appendChild(chatContainer);
+    document.body.appendChild(widgetContainer);
+
+    // Create toggle button
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = `chat-toggle${config.style.position === 'left' ? ' position-left' : ''}`;
+    toggleBtn.setAttribute('aria-label', 'Toggle chat');
+    toggleBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+    `;
+    document.body.appendChild(toggleBtn);
+
+    const newConversation = widgetContainer.querySelector('.new-conversation');
+    const chatInterface = widgetContainer.querySelector('.chat-interface');
+    const closeButton = chatInterface.querySelector('.close-button');
+    const chatMessages = chatInterface.querySelector('.chat-messages');
+    const chatInputForm = chatInterface.querySelector('.chat-input');
+    const chatInputTextarea = chatInputForm.querySelector('textarea');
+    const newChatBtn = newConversation.querySelector('.new-chat-btn');
+
+    // Toggle chat visibility
+    toggleBtn.addEventListener('click', () => {
+        if (chatContainer.classList.contains('open')) {
+            chatContainer.classList.remove('open');
+        } else {
+            chatContainer.classList.add('open');
+            newConversation.style.display = 'block';
+            chatInterface.classList.remove('active');
+            chatMessages.innerHTML = '';
+            currentSessionId = '';
+        }
+    });
+
+    // Start new conversation
+    newChatBtn.addEventListener('click', () => {
+        newConversation.style.display = 'none';
+        chatInterface.classList.add('active');
+        chatInputTextarea.focus();
+        currentSessionId = '';
+        chatMessages.innerHTML = '';
+    });
+
+    // Close chat interface
+    closeButton.addEventListener('click', () => {
+        chatInterface.classList.remove('active');
+        newConversation.style.display = 'block';
+    });
+
+    // Add message to chat
+    function addMessage(content, fromUser = true) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${fromUser ? 'user' : 'bot'}`;
+        messageDiv.textContent = content;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Send user message and get bot response
+    chatInputForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const userMessage = chatInputTextarea.value.trim();
+        if (!userMessage) return;
+
+        addMessage(userMessage, true);
+        chatInputTextarea.value = '';
+        chatInputTextarea.disabled = true;
+
+        try {
+            // Call webhook with message and session id if present
+            const webhookUrl = config.webhook.url + config.webhook.route;
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    sessionId: currentSessionId
+                })
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const data = await response.json();
+
+            if (data.sessionId) {
+                currentSessionId = data.sessionId;
+            }
+
+            if (data.reply) {
+                addMessage(data.reply, false);
+            } else {
+                addMessage('Sorry, no reply received.', false);
+            }
+        } catch (error) {
+            addMessage('Error: ' + error.message, false);
+        } finally {
+            chatInputTextarea.disabled = false;
+            chatInputTextarea.focus();
+        }
+    });
+})();
