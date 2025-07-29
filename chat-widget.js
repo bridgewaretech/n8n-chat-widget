@@ -328,10 +328,11 @@
     widgetContainer.className = 'n8n-chat-widget';
     
     // Set CSS variables for colors
-    widgetContainer.style.setProperty('--n8n-chat-primary-color', config.style.primaryColor);
-    widgetContainer.style.setProperty('--n8n-chat-secondary-color', config.style.secondaryColor);
-    widgetContainer.style.setProperty('--n8n-chat-background-color', config.style.backgroundColor);
-    widgetContainer.style.setProperty('--n8n-chat-font-color', config.style.fontColor);
+    widgetContainer.style.setProperty('--chat--color-primary', config.style.primaryColor);
+    widgetContainer.style.setProperty('--chat--color-secondary', config.style.secondaryColor);
+    widgetContainer.style.setProperty('--chat--color-background', config.style.backgroundColor);
+    widgetContainer.style.setProperty('--chat--color-font', config.style.fontColor);
+
 
     const chatContainer = document.createElement('div');
     chatContainer.className = `chat-container${config.style.position === 'left' ? ' position-left' : ''}`;
