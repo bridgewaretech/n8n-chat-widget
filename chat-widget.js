@@ -362,20 +362,16 @@
     const chatInterface = document.createElement('div');
     chatInterface.className = 'chat-interface';
     chatInterface.innerHTML = `
-        <div class="brand-header">
-            <img src="${config.branding.logo}" alt="Brand Logo" />
-            <span>${config.branding.name}</span>
-            <button class="close-button" title="Close">×</button>
-        </div>
-        <div class="chat-messages"></div>
-        <div class="chat-input">
-            <textarea placeholder="Type your message..."></textarea>
-            <button type="button">Send</button>
-        </div>
-        <div class="chat-footer">
-            <a href="${config.branding.poweredBy.link}" target="_blank" rel="noopener noreferrer">${config.branding.poweredBy.text}</a>
-        </div>
-    `;
+    <div class="chat-messages"></div>
+    <div class="chat-input">
+        <textarea placeholder="Type your message..."></textarea>
+        <button type="button">Send</button>
+    </div>
+    <div class="chat-footer">
+        <a href="${config.branding.poweredBy.link}" target="_blank" rel="noopener noreferrer">${config.branding.poweredBy.text}</a>
+    </div>
+`;
+
 
     chatContainer.appendChild(chatInterface);
     widgetContainer.appendChild(chatContainer);
