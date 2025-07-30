@@ -28,6 +28,7 @@
         .n8n-chat-widget .chat-container.position-left {
             right: auto;
             left: 20px;
+            bottom: 80px; /* increase bottom here */
         }
 
         .n8n-chat-widget .chat-container.open {
@@ -239,6 +240,7 @@
         .n8n-chat-widget .chat-toggle.position-left {
             right: auto;
             left: 20px;
+            bottom: 80px; /* increase bottom here */
         }
 
         .n8n-chat-widget .chat-toggle:hover {
