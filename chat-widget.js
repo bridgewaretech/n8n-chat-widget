@@ -1,34 +1,26 @@
 (function() {
-    // ... [Your existing CSS styles remain unchanged] ...
-
-    // Load Geist font
+    // Load Geist font from CDN
     const fontLink = document.createElement('link');
     fontLink.rel = 'stylesheet';
     fontLink.href = 'https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/style.css';
     document.head.appendChild(fontLink);
 
-    // Inject styles
+    // Inject styles (including the "toggle-up-on-open" fix)
     const styleSheet = document.createElement('style');
     styleSheet.textContent = `
-        /* Your existing styles here... */
-        /* Add this to the existing styles */
-
+        /* Move toggle button up when chat is open */
         .n8n-chat-widget .chat-toggle.open {
-            bottom: 640px !important; /* moves toggle up when chat is open */
+            bottom: 640px !important;
         }
-
         .n8n-chat-widget .chat-toggle.position-left.open {
             bottom: 640px !important;
         }
     `;
     document.head.appendChild(styleSheet);
 
-    // Default configuration
+    // Define default config in case none is passed via window.ChatWidgetConfig
     const defaultConfig = {
-        webhook: {
-            url: '',
-            route: ''
-        },
+        webhook: { url: '', route: '' },
         branding: {
             logo: '',
             name: '',
@@ -49,29 +41,33 @@
     };
 
     // Merge user config with defaults
-    const config = window.ChatWidgetConfig ? 
-        {
-            webhook: { ...defaultConfig.webhook, ...window.ChatWidgetConfig.webhook },
-            branding: { ...defaultConfig.branding, ...window.ChatWidgetConfig.branding },
-            style: { ...defaultConfig.style, ...window.ChatWidgetConfig.style }
-        } : defaultConfig;
+    const config = window.ChatWidgetConfig ? {
+        webhook: { ...defaultConfig.webhook, ...window.ChatWidgetConfig.webhook },
+        branding: { ...defaultConfig.branding, ...window.ChatWidgetConfig.branding },
+        style: { ...defaultConfig.style, ...window.ChatWidgetConfig.style }
+    } : defaultConfig;
 
+    // Prevent double initialization
     if (window.N8NChatWidgetInitialized) return;
     window.N8NChatWidgetInitialized = true;
 
     let currentSessionId = '';
 
+    // Create main container
     const widgetContainer = document.createElement('div');
     widgetContainer.className = 'n8n-chat-widget';
 
+    // Apply custom CSS variables
     widgetContainer.style.setProperty('--chat--color-primary', config.style.primaryColor);
     widgetContainer.style.setProperty('--chat--color-secondary', config.style.secondaryColor);
     widgetContainer.style.setProperty('--chat--color-background', config.style.backgroundColor);
     widgetContainer.style.setProperty('--chat--color-font', config.style.fontColor);
 
+    // Build chat container with branding and welcome
     const chatContainer = document.createElement('div');
     chatContainer.className = `chat-container${config.style.position === 'left' ? ' position-left' : ''}`;
 
+    // Welcome screen HTML
     const newConversationHTML = `
         <div class="brand-header">
             <img src="${config.branding.logo}" alt="Brand Logo" />
@@ -90,9 +86,9 @@
             <p class="response-text">${config.branding.responseTimeText}</p>
         </div>
     `;
-
     chatContainer.innerHTML = newConversationHTML;
 
+    // Build chat interface (input + messages)
     const chatInterface = document.createElement('div');
     chatInterface.className = 'chat-interface';
     chatInterface.innerHTML = `
@@ -105,10 +101,10 @@
             <a href="${config.branding.poweredBy.link}" target="_blank" rel="noopener noreferrer">${config.branding.poweredBy.text}</a>
         </div>
     `;
-
     chatContainer.appendChild(chatInterface);
     widgetContainer.appendChild(chatContainer);
 
+    // Add chat toggle button (floating icon)
     const chatToggle = document.createElement('button');
     chatToggle.className = `chat-toggle${config.style.position === 'left' ? ' position-left' : ''}`;
     chatToggle.title = 'Chat with us';
@@ -118,9 +114,9 @@
         </svg>
     `;
     widgetContainer.appendChild(chatToggle);
-
     document.body.appendChild(widgetContainer);
 
+    // DOM references
     const openBtn = chatToggle;
     const closeBtns = widgetContainer.querySelectorAll('.close-button');
     const newChatBtn = widgetContainer.querySelector('.new-chat-btn');
@@ -130,24 +126,26 @@
     const inputTextarea = chatInterfaceDiv.querySelector('textarea');
     const sendBtn = chatInterfaceDiv.querySelector('button[type="button"]');
 
+    // Helper: Generate UUID session ID
     function generateSessionId() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
             const r = Math.random() * 16 | 0,
-                v = c === 'x' ? r : (r & 0x3 | 0x8);
+                  v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     }
 
+    // Open chat: show welcome screen + move toggle
     function openChat() {
         chatContainer.classList.add('open');
         chatInterfaceDiv.classList.remove('active');
         newConversationDiv.style.display = 'block';
-        // Instead of hiding the toggle button, move it up:
-        openBtn.classList.add('open');
+        openBtn.classList.add('open'); // Move toggle up
         inputTextarea.value = '';
         messagesContainer.innerHTML = '';
     }
 
+    // Start a new session
     function startNewConversation() {
         currentSessionId = generateSessionId();
         newConversationDiv.style.display = 'none';
@@ -155,11 +153,13 @@
         inputTextarea.focus();
     }
 
+    // Close the chat window
     function closeChat() {
         chatContainer.classList.remove('open');
-        openBtn.classList.remove('open');
+        openBtn.classList.remove('open'); // Return toggle to normal position
     }
 
+    // Append new message to chat
     function appendMessage(text, sender = 'bot') {
         const messageEl = document.createElement('div');
         messageEl.className = `chat-message ${sender}`;
@@ -168,6 +168,7 @@
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
+    // Send a message to n8n webhook and handle reply
     async function sendMessage(message) {
         if (!config.webhook.url) {
             appendMessage("Error: Webhook URL is not configured.", 'bot');
@@ -179,9 +180,7 @@
         try {
             const response = await fetch(config.webhook.url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     sessionId: currentSessionId,
                     chatInput: message
@@ -194,17 +193,14 @@
             }
 
             const data = await response.json();
+            appendMessage(data.reply || "No reply from server.", 'bot');
 
-            if (data.reply) {
-                appendMessage(data.reply, 'bot');
-            } else {
-                appendMessage("No reply from server.", 'bot');
-            }
         } catch (error) {
             appendMessage("Network error: Could not send message.", 'bot');
         }
     }
 
+    // --- Event listeners ---
     openBtn.addEventListener('click', openChat);
     closeBtns.forEach(btn => btn.addEventListener('click', closeChat));
     newChatBtn.addEventListener('click', startNewConversation);
@@ -215,14 +211,4 @@
             inputTextarea.value = '';
         }
     });
-
-    inputTextarea.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendBtn.click();
-        }
-    });
-
-    openBtn.style.display = 'flex';
-    chatContainer.classList.remove('open');
-})();
+    inputTextarea.addEventListener('keydown
