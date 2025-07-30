@@ -2,7 +2,7 @@
 
 This GitHub script provides a customizable, embeddable chat widget designed to integrate seamlessly with websites, allowing users to interact with an n8n workflow as a backend.
 
-Here's a breakdown of its functionality for your documentation:
+Here's a breakdown of its functionality:
 
 N8n Chat Widget Script Summary
 This JavaScript script creates a self-contained, customizable chat widget that can be embedded into any website. It provides a user interface for chat interactions and facilitates communication with a backend N8N workflow via webhooks.
