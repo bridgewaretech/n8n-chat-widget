@@ -274,7 +274,8 @@
     widgetContainer.style.setProperty('--chat--color-font', config.style.fontColor);
 
     const chatContainer = document.createElement('div');
-    chatContainer.className = \`chat-container\${config.style.position === 'left' ? ' position-left' : ''}\`;
+    chatContainer.className = `chat-container${config.style.position === 'left' ? ' position-left' : ''}`;
+
 
     chatContainer.innerHTML = \`
         <!-- brand header, new conversation section -->
