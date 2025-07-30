@@ -457,7 +457,7 @@
                 },
                 body: JSON.stringify({
                     sessionId: currentSessionId,
-                    message: message
+                    chatInput: message
                 })
             });
 
