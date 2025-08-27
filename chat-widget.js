@@ -1,5 +1,6 @@
 (function() {
     // Create and inject styles
+    // Added @media queries and using relative units for mobile responsive layout styles.
     const styles = `
         .n8n-chat-widget {
             --chat--color-primary: var(--n8n-chat-primary-color, #854fff);
@@ -7,6 +8,41 @@
             --chat--color-background: var(--n8n-chat-background-color, #ffffff);
             --chat--color-font: var(--n8n-chat-font-color, #333333);
             font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            
+            @media (max-width: 600px) {
+                .n8n-chat-widget .chat-container {
+                    width: 90vw;
+                    height: 80vh;
+                    right: 5vw !important;
+                    left: 5vw !important;
+                    bottom: 5vh !important;
+                    border-radius: 12px;
+                }
+            
+                .n8n-chat-widget .chat-toggle {
+                    width: 50px;
+                    height: 50px;
+                    bottom: 15px;
+                    right: 15px;
+                }
+            
+                .n8n-chat-widget .chat-toggle.position-left {
+                    left: 15px;
+                    right: auto;
+                }
+            
+                .n8n-chat-widget .chat-input textarea {
+                    font-size: 13px;
+                }
+            
+                .n8n-chat-widget .welcome-text {
+                    font-size: 20px;
+                }
+            
+                .n8n-chat-widget .new-chat-btn {
+                    font-size: 14px;
+                }
+            }        
         }
 
         .n8n-chat-widget .chat-container {
@@ -501,3 +537,4 @@
     openBtn.style.display = 'flex';
     chatContainer.classList.remove('open');
 })();
+
