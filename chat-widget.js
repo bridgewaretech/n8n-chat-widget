@@ -550,6 +550,3 @@
     openBtn.style.display = 'flex';
     chatContainer.classList.remove('open');
 })();
-
-
-
