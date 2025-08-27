@@ -9,14 +9,14 @@
             --chat--color-font: var(--n8n-chat-font-color, #333333);
             font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             
-            @media (max-width: 600px) {
+           @media (max-width: 600px) {
                 .n8n-chat-widget .chat-container {
-                    width: 90vw;
-                    height: 80vh;
-                    right: 5vw !important;
-                    left: 5vw !important;
-                    bottom: 5vh !important;
-                    border-radius: 12px;
+                    width: 95vw;
+                    height: 85vh;
+                    bottom: 10px;
+                    right: 10px;
+                    left: 10px;
+                    border-radius: 8px;
                 }
             
                 .n8n-chat-widget .chat-toggle {
@@ -31,18 +31,31 @@
                     right: auto;
                 }
             
-                .n8n-chat-widget .chat-input textarea {
-                    font-size: 13px;
+                .n8n-chat-widget .brand-header span {
+                    font-size: 16px;
                 }
             
                 .n8n-chat-widget .welcome-text {
-                    font-size: 20px;
+                    font-size: 18px;
                 }
             
                 .n8n-chat-widget .new-chat-btn {
                     font-size: 14px;
+                    padding: 12px 16px;
                 }
-            }        
+            
+                .n8n-chat-widget .chat-input textarea {
+                    font-size: 13px;
+                }
+            
+                .n8n-chat-widget .chat-footer a {
+                    font-size: 11px;
+                }
+            
+                .n8n-chat-widget .chat-message {
+                    font-size: 13px;
+                }
+            }      
         }
 
         .n8n-chat-widget .chat-container {
@@ -537,4 +550,5 @@
     openBtn.style.display = 'flex';
     chatContainer.classList.remove('open');
 })();
+
 
