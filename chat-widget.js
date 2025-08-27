@@ -14,11 +14,11 @@
                     width: 95vw;
                     height: 85vh;
                     bottom: 10px;
-                    right: 10px;
-                    left: 10px;
+                    left: 50% !important;
+                    right: auto !important;
+                    transform: translateX(-50%);
                     border-radius: 8px;
-                }
-            
+                }            
                 .n8n-chat-widget .chat-toggle {
                     width: 50px;
                     height: 50px;
@@ -550,5 +550,6 @@
     openBtn.style.display = 'flex';
     chatContainer.classList.remove('open');
 })();
+
 
 
