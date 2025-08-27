@@ -295,8 +295,8 @@
             welcomeText: '',
             responseTimeText: '',
             poweredBy: {
-                text: 'Powered by Bridgeware Technologies using n8n',
-                link: 'https://n8n.io'
+                text: 'Powered by Bridgeware Technologies',
+                link: 'https://bridgewaretech.com/'
             }
         },
         style: {
