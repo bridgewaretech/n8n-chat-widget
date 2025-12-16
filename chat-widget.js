@@ -157,14 +157,15 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: box-shadow 0.3s;
+            transition: filter 0.3s ease;
             font-weight: 500;
             font-family: inherit;
             margin-bottom: 12px;
         }
 
         .n8n-chat-widget .new-chat-btn:hover {
-			box-shadow: 0 6px 16px rgba(133, 79, 255, 0.35);
+			filter: drop-shadow(0 10px 20px rgba(133, 79, 255, 0.35));
+			transform: translateY(-1px);
 		}
 
         .n8n-chat-widget .message-icon {
