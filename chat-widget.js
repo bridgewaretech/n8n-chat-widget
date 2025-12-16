@@ -165,8 +165,8 @@
         }
 
         .n8n-chat-widget .new-chat-btn:hover {
-            transform: scale(1.02);
-        }
+			box-shadow: 0 6px 16px rgba(133, 79, 255, 0.35);
+		}
 
         .n8n-chat-widget .message-icon {
             width: 20px;
@@ -319,6 +319,20 @@
         .n8n-chat-widget .chat-footer a:hover {
             opacity: 1;
         }
+		
+		.n8n-chat-widget .chat-container {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.n8n-chat-widget .new-conversation {
+			flex: 1;
+		}
+
+		.n8n-chat-widget .chat-interface {
+			flex: 1;
+		}
+
     `;
 
     // Load Geist font
@@ -415,15 +429,24 @@
     <div class="chat-input">
         <textarea placeholder="Type your message..."></textarea>
         <button type="button">Send</button>
-    </div>
-    <div class="chat-footer">
-        <a href="${config.branding.poweredBy.link}" target="_blank" rel="noopener noreferrer">${config.branding.poweredBy.text}</a>
-    </div>
-`;
+    </div>    
+`	;
 
 
     chatContainer.appendChild(chatInterface);
-    widgetContainer.appendChild(chatContainer);
+
+	// Footer (always visible)
+	const footer = document.createElement('div');
+	footer.className = 'chat-footer';
+	footer.innerHTML = `
+		<a href="${config.branding.poweredBy.link}" target="_blank" rel="noopener noreferrer">
+			${config.branding.poweredBy.text}
+		</a>
+	`;
+
+	chatContainer.appendChild(footer);
+	widgetContainer.appendChild(chatContainer);
+
 
     // Create chat toggle button
     const chatToggle = document.createElement('button');
