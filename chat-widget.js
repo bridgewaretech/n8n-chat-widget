@@ -158,7 +158,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: transform 0.3s;
+            transition: box-shadow 0.3s;
             font-weight: 500;
             font-family: inherit;
             margin-bottom: 12px;
@@ -318,12 +318,7 @@
 
         .n8n-chat-widget .chat-footer a:hover {
             opacity: 1;
-        }
-		
-		.n8n-chat-widget .chat-container {
-			display: flex;
-			flex-direction: column;
-		}
+        }		
 
 		.n8n-chat-widget .new-conversation {
 			flex: 1;
@@ -332,7 +327,10 @@
 		.n8n-chat-widget .chat-interface {
 			flex: 1;
 		}
-
+		
+		.n8n-chat-widget .new-conversation {
+			overflow: visible;
+		}
     `;
 
     // Load Geist font
@@ -499,9 +497,11 @@
     }
 
     function closeChat() {
-        chatContainer.classList.remove('open');
-        openBtn.style.display = 'flex';
-    }
+		chatContainer.classList.remove('open');
+		chatInterfaceDiv.classList.remove('active');
+		newConversationDiv.style.display = 'block';
+		openBtn.style.display = 'flex';
+	}
 
     // Append a message to chat
     function appendMessage(text, sender = 'bot') {
