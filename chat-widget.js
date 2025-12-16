@@ -163,9 +163,33 @@
             margin-bottom: 12px;
         }
 
+		.n8n-chat-widget .new-chat-btn {
+			position: relative;
+			overflow: hidden; /* important */
+		}
+
+		.n8n-chat-widget .new-chat-btn::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: radial-gradient(
+				circle at center,
+				rgba(255, 255, 255, 0.35),
+				transparent 60%
+			);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			pointer-events: none;
+		}
+
         .n8n-chat-widget .new-chat-btn:hover {
-			filter: drop-shadow(0 10px 20px rgba(133, 79, 255, 0.35));
+			box-shadow: none;
+			filter: none;
 			transform: translateY(-1px);
+		}
+		
+		.n8n-chat-widget .new-chat-btn:hover::after {
+			opacity: 1;
 		}
 
         .n8n-chat-widget .message-icon {
