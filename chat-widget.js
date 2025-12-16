@@ -70,7 +70,7 @@
             border-radius: 12px;
             box-shadow: 0 8px 32px rgba(133, 79, 255, 0.15);
             border: 1px solid rgba(133, 79, 255, 0.2);
-            overflow: hidden;
+            overflow: visible;
             font-family: inherit;
         }
 
@@ -127,15 +127,14 @@
         }
 
         .n8n-chat-widget .new-conversation {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            text-align: center;
-            width: 100%;
-            max-width: 300px;
-        }
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 20px;
+			text-align: center;
+		}
 
         .n8n-chat-widget .welcome-text {
             font-size: 24px;
@@ -305,6 +304,7 @@
             text-align: center;
             background: var(--chat--color-background);
             border-top: 1px solid rgba(133, 79, 255, 0.1);
+			margin-top: auto;
         }
 
         .n8n-chat-widget .chat-footer a {
